@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
+import { findAll } from "discourse/models/login-method";
 
 export default class GitcoinPassportBanner extends Component {
   @service currentUser;
@@ -22,22 +23,19 @@ export default class GitcoinPassportBanner extends Component {
     }
   }
   
-  get ctaText() {
-    if (this.currentUser) {
-      const i = this.currentUser.gitcoin_passport_status;
-      return `gitcoin_passport_plugin.linktext_${i}` || "unknown";
-    }
-  }
-
   @action
   clickCTA() {
     if (this.currentUser) {
       const i = this.currentUser.gitcoin_passport_status;
-      
-      const url = I18n.t(`gitcoin_passport_plugin.link_${i}`) || "/";
-      if (i == 1) {
-        window.location.href = url;
-      } else { // new window
+      if (i == 1) { // connect to Eth
+        const allMethods = findAll();
+        const siweMethod = allMethods.find(obj => obj.name === 'siwe');
+        if (siweMethod) {
+          siweMethod.doLogin({reconnect:true});
+        }
+      }
+      if (i == 2) { // connect to Gitcoin Passport
+        const url = I18n.t("gitcoin_passport_plugin.link_gitcoin_connect");
         window.open(url, '_blank');
       }
     }

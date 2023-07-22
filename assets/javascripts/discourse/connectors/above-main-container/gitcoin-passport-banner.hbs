@@ -2,7 +2,12 @@
   <div class="row">
     <div class="passport-banner alert alert-info">
       {{ this.bannerText}}
-      <DButton @action={{action this.clickCTA}} @label={{this.ctaText}}/>
+      <DButton
+        @action={{action this.clickCTA}}
+        @label="gitcoin_passport_plugin.connect"
+        @class="btn-default"
+        @icon="plug"
+      />
     </div>
   </div>
 {{/if}}

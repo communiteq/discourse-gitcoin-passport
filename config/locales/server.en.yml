@@ -1,0 +1,5 @@
+en:
+  site_settings:
+    gitcoin_passport_enabled: "Enable Gitcoin Passport plugin"
+    gitcoin_passport_api_key: "Gitcoin Passport API key"
+    gitcoin_passport_scorer_id: "Gitcoin Passport Scorer ID"

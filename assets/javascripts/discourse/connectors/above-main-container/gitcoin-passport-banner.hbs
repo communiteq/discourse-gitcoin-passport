@@ -1,0 +1,8 @@
+{{#if this.showPassportBanner}}
+  <div class="row">
+    <div class="passport-banner alert alert-info">
+      {{ this.bannerText}}
+      <DButton @action={{action this.clickCTA}} @label={{this.ctaText}}/>
+    </div>
+  </div>
+{{/if}}

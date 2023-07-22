@@ -1,0 +1,11 @@
+plugins:
+  gitcoin_passport_enabled:
+    client: true
+    default: false
+  gitcoin_passport_api_key:
+    client: false
+    secret: true
+    default: ""
+  gitcoin_passport_scorer_id:
+    client: false
+    default: ""

@@ -1,0 +1,15 @@
+<section class="details">
+  <div class="display-row">
+    <div class="field">{{i18n "gitcoin_passport_plugin.title"}}</div>
+    <div class="value">{{this.passportStatus}}</div>
+    <div class="controls"></div>
+  </div>
+
+  {{#if this.showUHScore}}
+  <div class="display-row">
+    <div class="field">{{i18n "gitcoin_passport_plugin.unique_humanity_score"}}</div>
+    <div class="value">{{this.uniqueHumanityScore}}</div>
+    <div class="controls"></div>
+  </div>
+  {{/if}}
+</section>

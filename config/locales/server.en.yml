@@ -3,3 +3,5 @@ en:
     gitcoin_passport_enabled: "Enable Gitcoin Passport plugin"
     gitcoin_passport_api_key: "Gitcoin Passport API key"
     gitcoin_passport_scorer_id: "Gitcoin Passport Scorer ID"
+    gitcoin_passport_group_levels: "The unique humanity scores that should have a group"
+    gitcoin_passport_auto_manage_groups: "Automatically manage groups for the above levels"

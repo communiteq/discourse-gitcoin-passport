@@ -9,3 +9,9 @@ plugins:
   gitcoin_passport_scorer_id:
     client: false
     default: ""
+  gitcoin_passport_group_levels:
+    client: false
+    default: 0,5,10,20,40,80
+  gitcoin_passport_auto_manage_groups:
+    client: false
+    default: true

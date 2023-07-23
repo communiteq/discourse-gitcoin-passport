@@ -8,6 +8,8 @@ enabled_site_setting :gitcoin_passport_enabled
 
 after_initialize do
 
+  require_relative "lib/discourse_gitcoin_passport/helpers"
+
   class ::User
     def gitcoin_passport_status
       eth_account = self.associated_accounts.find { |aa| aa[:name] == "siwe" }
@@ -21,12 +23,25 @@ after_initialize do
         return 1 # no siwe account connected
       end
     end
-  end
 
-  def refresh_unique_humanity_score
-    return unless SiteSetting.gitcoin_passport_enabled && self.gitcoin_passport_status > 1
+    def unique_humanity_score
+      self.custom_fields[:unique_humanity_score].to_f
+    end
 
-    # implement
+    def refresh_unique_humanity_score
+      return unless SiteSetting.gitcoin_passport_enabled && self.gitcoin_passport_status > 1
+      # TODO get passport score and call set_unique_humanity_score
+    end
+
+    def set_unique_humanity_score(score)
+      # we save the score with leading digits as 000.00 so we can easily compare strings in SQL
+      fmt_score = sprintf('%06.2f', score)
+      if self.custom_fields[:unique_humanity_score] != fmt_score
+        self.custom_fields[:unique_humanity_score] = fmt_score
+        self.save_custom_fields
+        DiscourseGitcoinPassport::Helpers.update_groups_for_user(self)
+      end
+    end
   end
 
   %i[current_user admin_detailed_user].each do |s|
@@ -47,5 +62,11 @@ after_initialize do
     end
   end
 
+  DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
+    if [:gitcoin_passport_group_levels].include? name
+      levels = new_value.split(',').map(&:to_i).select { |num| (0..100).include?(num) }
+      DiscourseGitcoinPassport::Helpers.change_automatic_groups(levels)
+    end
+  end
 
 end

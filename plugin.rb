@@ -7,8 +7,10 @@
 enabled_site_setting :gitcoin_passport_enabled
 
 after_initialize do
-
   require_relative "lib/discourse_gitcoin_passport/helpers"
+  require_relative "jobs/regular/gitcoin_passport_get_score.rb"
+  require_relative "jobs/regular/gitcoin_passport_update_group_membership.rb"
+  require_relative "jobs/scheduled/gitcoin_passport_update_all.rb"
 
   class ::User
     def gitcoin_passport_status
@@ -30,7 +32,9 @@ after_initialize do
 
     def refresh_unique_humanity_score
       return unless SiteSetting.gitcoin_passport_enabled && self.gitcoin_passport_status > 1
-      # TODO get passport score and call set_unique_humanity_score
+      
+      args = { user_id: self.id }
+      Jobs.enqueue(:gitcoin_passport_get_score, args)
     end
 
     def set_unique_humanity_score(score)
@@ -54,7 +58,7 @@ after_initialize do
     end
 
     add_to_serializer(s, :unique_humanity_score?) do
-      object.custom_fields[:unique_humanity_score] || 0
+      object.custom_fields[:unique_humanity_score].to_f || 0
     end
 
     add_to_serializer(s, :include_unique_humanity_score?) do

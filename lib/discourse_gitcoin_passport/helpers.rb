@@ -2,6 +2,22 @@
 
 module DiscourseGitcoinPassport
   module Helpers
+
+    # should be called async
+    def self.update_all_passport_scores
+      user_ids = UserAssociatedAccount.where(provider_name: "siwe").pluck(:user_id)
+      User.where(id: user_ids).each do |user|
+        self.update_passport_score_for_user(user)
+      end
+    end
+
+    # should be called async
+    def self.update_passport_score_for_user(user)
+      score = rand(101) # TODO call passport client
+
+      user.set_unique_humanity_score(score)
+    end
+
     def self.change_automatic_groups(levels)
       current_groups = Group.where("name LIKE ?", "unique_humanity_%")
 
@@ -19,7 +35,7 @@ module DiscourseGitcoinPassport
       end
 
       if (remove_levels.count + add_levels.count) > 0
-        # TODO run update_users_for_all_groups async
+        Jobs.enqueue(:gitcoin_passport_update_group_membership)
       end
     end
 

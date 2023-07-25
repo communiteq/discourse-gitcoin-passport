@@ -8,6 +8,7 @@ enabled_site_setting :gitcoin_passport_enabled
 
 after_initialize do
   require_relative "lib/discourse_gitcoin_passport/helpers"
+  require_relative "lib/discourse_gitcoin_passport/api_client.rb"
   require_relative "jobs/regular/gitcoin_passport_get_score.rb"
   require_relative "jobs/regular/gitcoin_passport_update_group_membership.rb"
   require_relative "jobs/scheduled/gitcoin_passport_update_all.rb"

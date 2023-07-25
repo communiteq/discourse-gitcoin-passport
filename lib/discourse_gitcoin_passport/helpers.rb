@@ -13,9 +13,14 @@ module DiscourseGitcoinPassport
 
     # should be called async
     def self.update_passport_score_for_user(user)
-      score = rand(101) # TODO call passport client
-
-      user.set_unique_humanity_score(score)
+      eth_account = user.associated_accounts.find { |aa| aa[:name] == "siwe" }
+      if eth_account
+        api_client = DiscourseGitcoinPassport::ApiClient.new(SiteSetting.gitcoin_passport_api_key, SiteSetting.gitcoin_passport_scorer_id)
+        result = api_client.submit_passport(eth_account[:description])
+        if (result["status"] == "DONE") && (result['score'].to_f >= 0)
+          user.set_unique_humanity_score(result['score'].to_f)
+        end
+      end
     end
 
     def self.change_automatic_groups(levels)

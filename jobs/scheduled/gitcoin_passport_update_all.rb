@@ -2,7 +2,7 @@
 
 module Jobs
   class GitcoinPassportUpdateAll < Jobs::Scheduled
-    every 1.minutes
+    every 24.hours
 
     def execute(_args)
       return unless SiteSetting.gitcoin_passport_enabled

@@ -1,12 +1,13 @@
 {{#if this.showPassportBanner}}
   <div class="row">
     <div class="passport-banner alert alert-info">
-      {{ this.bannerText}}
+      {{{this.bannerText}}}
       <DButton
         @action={{action this.clickCTA}}
         @label="gitcoin_passport_plugin.connect"
         @class="btn-default"
         @icon="plug"
+        @isLoading={{this.connectingPassport}}
       />
     </div>
   </div>

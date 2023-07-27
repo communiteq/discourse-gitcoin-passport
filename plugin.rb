@@ -6,6 +6,12 @@
 
 enabled_site_setting :gitcoin_passport_enabled
 
+module ::DiscourseGitcoinPassport
+  PLUGIN_NAME = "discourse-gitcoin-passport"
+end
+
+require_relative "lib/discourse_gitcoin_passport/engine"
+
 after_initialize do
   require_relative "lib/discourse_gitcoin_passport/helpers"
   require_relative "lib/discourse_gitcoin_passport/api_client.rb"

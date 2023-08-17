@@ -5,3 +5,4 @@ en:
     gitcoin_passport_scorer_id: "Gitcoin Passport Scorer ID"
     gitcoin_passport_group_levels: "The unique humanity scores that should have a group"
     gitcoin_passport_auto_manage_groups: "Automatically manage groups for the above levels"
+    gitcoin_passport_ethereum_node_url: "Public Ethereum node to use for name resolution"

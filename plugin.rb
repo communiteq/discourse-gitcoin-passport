@@ -52,6 +52,7 @@ after_initialize do
         self.save_custom_fields
         DiscourseGitcoinPassport::Helpers.update_groups_for_user(self)
       end
+      score
     end
   end
 

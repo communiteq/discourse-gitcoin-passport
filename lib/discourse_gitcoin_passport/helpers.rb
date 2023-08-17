@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
-require "eth"
+begin
+  require 'eth'
+rescue LoadError
+  # ignore
+end
 
 module DiscourseGitcoinPassport
   module Helpers
@@ -30,7 +34,7 @@ module DiscourseGitcoinPassport
       eth_account = user.associated_accounts.find { |aa| aa[:name] == "siwe" }
       if eth_account
         eth_address = eth_account[:description]
-        if eth_address && eth_address.ends_with?(".eth")
+        if eth_address && eth_address.ends_with?(".eth") && Object.const_defined?("Eth::Ens::Resolver")
           eth_address = self.ens_resolver.resolve(eth_address)
         end
         api_client = DiscourseGitcoinPassport::ApiClient.new(SiteSetting.gitcoin_passport_api_key, SiteSetting.gitcoin_passport_scorer_id)

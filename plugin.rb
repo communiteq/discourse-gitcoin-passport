@@ -19,6 +19,14 @@ after_initialize do
   require_relative "jobs/regular/gitcoin_passport_update_group_membership.rb"
   require_relative "jobs/scheduled/gitcoin_passport_update_all.rb"
 
+  unless Object.const_defined?("Eth::Ens::Resolver")
+    AdminDashboardData.add_problem_check do
+      "The discourse-gitcoin-passport plugin depends on the discourse-siwe-auth " +
+      "plugin version 0.1.2 or higher for ENS name resolution and authentication, " +
+      "however it does not seem to be installed."
+    end
+  end
+
   class ::User
     def gitcoin_passport_status
       eth_account = self.associated_accounts.find { |aa| aa[:name] == "siwe" }

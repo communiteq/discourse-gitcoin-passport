@@ -79,6 +79,70 @@ module DiscourseGitcoinPassport
       end
     end
 
+    def self.get_badge_type(str)
+      case str
+      when /_bronze_/
+        BadgeType::Bronze
+      when /_silver_/
+        BadgeType::Silver
+      when /_gold_/
+        BadgeType::Gold
+      else
+        nil
+      end
+    end
+
+    def self.get_badge_score_for_type(badge_type)
+      case badge_type
+      when BadgeType::Bronze
+        SiteSetting.gitcoin_passport_badge_bronze_score
+      when BadgeType::Silver
+        SiteSetting.gitcoin_passport_badge_silver_score
+      when BadgeType::Gold
+        SiteSetting.gitcoin_passport_badge_gold_score
+      else
+        nil # or raise an error if you prefer
+      end
+    end
+
+    def self.update_badges_for_user(user)
+      score = user.unique_humanity_score
+      badge_group = BadgeGrouping.find_by(name: SiteSetting.gitcoin_passport_badge_group)
+      if badge_group
+        Badge.where(badge_grouping_id: badge_group.id).each do |badge|
+          min_score = self.get_badge_score_for_type(badge.badge_type_id)
+          if score >= min_score
+            BadgeGranter.grant(badge, user)
+          else
+            user_badge = UserBadge.find_by(badge_id: badge.id, user_id: user.id)
+            if user_badge
+              BadgeGranter.revoke(user_badge)
+            end
+          end
+        end
+      end
+    end
+
+    def self.update_users_for_badge(badge)
+      min_score = self.get_badge_score_for_type(badge.badge_type_id)
+      formatted_min_score = sprintf('%06.2f', min_score)
+      current_user_ids = UserBadge.where(badge_id: badge.id).pluck(:user_id)
+      qualifying_user_ids = UserCustomField.where(name: 'unique_humanity_score').where("value >= '#{formatted_min_score}'").pluck(:user_id)
+
+      ids_to_add = qualifying_user_ids - current_user_ids
+      User.where(id: ids_to_add).each do |user|
+        BadgeGranter.grant(badge, user)
+      end
+
+      ids_to_remove = current_user_ids - qualifying_user_ids
+      ids_to_remove.each do |user_id|
+        user_badge = UserBadge.find_by(badge_id: badge.id, user_id: user_id)
+        if user_badge
+          BadgeGranter.revoke(user_badge)
+        end
+      end
+    end
+
     def self.update_users_for_group(group)
       level = group.name[/unique_humanity_(\d+)/,1].to_i
       formatted_level = sprintf('%06.2f', level)

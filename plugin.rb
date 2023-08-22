@@ -78,6 +78,22 @@ after_initialize do
     end
   end
 
+  # destroy passport on removal of SIWE account
+  add_model_callback(UserAssociatedAccount, :before_destroy) do
+    if self.provider_name = "siwe"
+      self.user.set_unique_humanity_score(0)
+      self.user.custom_fields.delete(:unique_humanity_score)
+      self.user.save_custom_fields
+    end
+  end
+
+  # refresh screen on connect of SIWE account
+  add_model_callback(UserAssociatedAccount, :after_commit, on: :create) do
+    if self.provider_name = "siwe"
+      MessageBus.publish("/file-change", ["refresh"], user_ids: [ self.user.id ])
+    end
+  end
+
   DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
     if [:gitcoin_passport_group_levels].include? name
       DiscourseGitcoinPassport::Helpers.change_automatic_groups

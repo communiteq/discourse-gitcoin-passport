@@ -1,0 +1,13 @@
+  {{#if this.showUHScore}}
+    <label class="control-label">{{i18n "gitcoin_passport_plugin.title"}}</label>
+    <div class="controls">
+        <span>{{i18n "gitcoin_passport_plugin.unique_humanity_score"}}: {{this.uniqueHumanityScore}}</span>
+        <DButton
+          @icon="sync"
+          @class="btn btn-default"
+          @action={{action "refreshPassport"}}
+          @label="gitcoin_passport_plugin.refresh"
+          @isLoading={{this.refreshingPassport}}
+        />
+    </div>
+  {{/if}}

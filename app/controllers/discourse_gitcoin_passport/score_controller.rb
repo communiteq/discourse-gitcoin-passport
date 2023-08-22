@@ -7,9 +7,14 @@ module DiscourseGitcoinPassport
     before_action :ensure_logged_in
 
     def refresh
-      DiscourseGitcoinPassport::Helpers.update_passport_score_for_user(current_user)
+      if current_user.admin? && params[:user_id].present?
+        user = User.find(params[:user_id])
+      else
+        user = current_user
+      end
+      DiscourseGitcoinPassport::Helpers.update_passport_score_for_user(user)
       render json: {
-        unique_humanity_score: current_user.unique_humanity_score
+        unique_humanity_score: user.unique_humanity_score
       }
     end
   end

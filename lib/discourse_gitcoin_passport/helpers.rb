@@ -42,6 +42,8 @@ module DiscourseGitcoinPassport
         if (result["status"] == "DONE") && (result['score'].to_f >= 0)
           user.set_unique_humanity_score(result['score'].to_f)
         end
+      else
+        user.set_unique_humanity_score(0)
       end
     end
 

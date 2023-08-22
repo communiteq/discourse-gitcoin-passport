@@ -45,7 +45,8 @@ module DiscourseGitcoinPassport
       end
     end
 
-    def self.change_automatic_groups(levels)
+    def self.change_automatic_groups
+      levels = SiteSetting.gitcoin_passport_group_levels.split(',').map(&:to_i).select { |num| (0..100).include?(num) }
       current_groups = Group.where("name LIKE ?", "unique_humanity_%")
 
       current_levels = current_groups.map { |group| group[:name][/unique_humanity_(\d+)/, 1] }.compact.map(&:to_i).uniq

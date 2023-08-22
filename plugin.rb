@@ -80,8 +80,7 @@ after_initialize do
 
   DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
     if [:gitcoin_passport_group_levels].include? name
-      levels = new_value.split(',').map(&:to_i).select { |num| (0..100).include?(num) }
-      DiscourseGitcoinPassport::Helpers.change_automatic_groups(levels)
+      DiscourseGitcoinPassport::Helpers.change_automatic_groups
     end
 
     if [:gitcoin_passport_badge_group].include? name

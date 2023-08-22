@@ -1,6 +1,6 @@
 # name: discourse-gitcoin-passport
 # about: Communiteq Gitcoin Passport plugin
-# version: 1.0.2
+# version: 1.0.3
 # authors: richard@communiteq.com
 # url: https://github.com/communiteq/discourse-gitcoin-passport
 
@@ -70,11 +70,11 @@ after_initialize do
 
   %i[current_user basic_user admin_detailed_user].each do |s|
     add_to_serializer(s, :gitcoin_passport_status) {
-      object.gitcoin_passport_status
+      object.gitcoin_passport_status rescue 0
     }
 
     add_to_serializer(s, :unique_humanity_score?) do
-      object.custom_fields[:unique_humanity_score].to_f || 0
+      object.custom_fields[:unique_humanity_score].to_f || 0 rescue 0
     end
   end
 

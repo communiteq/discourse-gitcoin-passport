@@ -1,6 +1,6 @@
 # name: discourse-gitcoin-passport
 # about: Communiteq Gitcoin Passport plugin
-# version: 1.0.1
+# version: 1.0.2
 # authors: richard@communiteq.com
 # url: https://github.com/communiteq/discourse-gitcoin-passport
 
@@ -126,5 +126,15 @@ after_initialize do
     end
   end
 
-  DiscourseGitcoinPassport::Helpers.change_automatic_groups if Discourse.running_in_rack?
+  # initialize correctly
+  if Discourse.running_in_rack?
+    DiscourseGitcoinPassport::Helpers.change_automatic_groups
+    group_id = BadgeGrouping.find_by(name: SiteSetting.gitcoin_passport_badge_group)&.id
+    if group_id
+      Badge.where(badge_grouping_id: group_id).pluck(:id).each do |badge_id|
+        args = { badge_id: badge_id }
+        Jobs.enqueue(:gitcoin_passport_update_badge_users, args)
+      end
+    end
+  end
 end

@@ -12,3 +12,4 @@ en:
       banner_2: 'Please connect your Gitcoin Passport to your account. Set it up <a target="_blank" href="https://passport.gitcoin.co/">here</a>, then press '
       link_gitcoin_connect: "https://passport.gitcoin.co/"
       connect: "Connect"
+      refresh: "Refresh"

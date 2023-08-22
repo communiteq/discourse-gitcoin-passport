@@ -1,4 +1,5 @@
 <section class="details">
+  <div class="display-row"></div>
   <div class="display-row">
     <div class="field">{{i18n "gitcoin_passport_plugin.title"}}</div>
     <div class="value">{{this.passportStatus}}</div>
@@ -9,7 +10,15 @@
   <div class="display-row">
     <div class="field">{{i18n "gitcoin_passport_plugin.unique_humanity_score"}}</div>
     <div class="value">{{this.uniqueHumanityScore}}</div>
-    <div class="controls"></div>
+    <div class="controls">
+        <DButton
+          @icon="sync"
+          @class="btn btn-default"
+          @action={{action "refreshPassport"}}
+          @label="gitcoin_passport_plugin.refresh"
+          @isLoading={{this.refreshingPassport}}
+    />
+    </div>
   </div>
   {{/if}}
 </section>

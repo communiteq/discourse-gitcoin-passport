@@ -1,6 +1,11 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
+import { tracked } from "@glimmer/tracking";
+import { ajax } from "discourse/lib/ajax";
 
 export default class GitcoinPassportUserAdmin extends Component {
+  @tracked refreshingPassport = false;
+  @tracked score = this.args.outletArgs.model.unique_humanity_score;
 
   get passportStatus() {
     const i = this.args.outletArgs.model.gitcoin_passport_status;
@@ -12,6 +17,24 @@ export default class GitcoinPassportUserAdmin extends Component {
   }
 
   get uniqueHumanityScore() {
-    return this.args.outletArgs.model.unique_humanity_score;
+    return this.score;
+  }
+
+  @action
+  refreshPassport() {
+    this.refreshingPassport = true;
+    ajax({
+      url: "/gitcoin_passport/refresh_score/" + this.args.outletArgs.model.id,
+      type: "POST",
+    })
+    .then((result) => {
+      this.score = result.unique_humanity_score;
+    })
+    .catch((e) => {
+      popupAjaxError(e);
+    })
+    .finally(() => {
+      this.refreshingPassport = false;
+    });
   }
 }

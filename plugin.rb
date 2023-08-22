@@ -68,7 +68,7 @@ after_initialize do
     end
   end
 
-  %i[current_user admin_detailed_user].each do |s|
+  %i[current_user basic_user admin_detailed_user].each do |s|
     add_to_serializer(s, :gitcoin_passport_status) {
       object.gitcoin_passport_status
     }

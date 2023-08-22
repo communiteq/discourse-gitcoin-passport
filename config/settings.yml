@@ -12,8 +12,8 @@ plugins:
   gitcoin_passport_group_levels:
     client: false
     default: 0,5,10,20,40,80
-  gitcoin_passport_auto_manage_groups:
-    client: false
+  gitcoin_passport_show_on_usercard:
+    client: true
     default: true
   gitcoin_passport_ethereum_node_url:
     client: false

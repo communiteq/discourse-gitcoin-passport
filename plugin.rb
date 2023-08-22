@@ -73,16 +73,8 @@ after_initialize do
       object.gitcoin_passport_status
     }
 
-    add_to_serializer(s, :include_gitcoin_passport_status?) do
-      SiteSetting.gitcoin_passport_enabled
-    end
-
     add_to_serializer(s, :unique_humanity_score?) do
       object.custom_fields[:unique_humanity_score].to_f || 0
-    end
-
-    add_to_serializer(s, :include_unique_humanity_score?) do
-      SiteSetting.gitcoin_passport_enabled
     end
   end
 

@@ -94,7 +94,22 @@ after_initialize do
     end
   end
 
+  def initialize_gitcoin_passport_plugin
+    DiscourseGitcoinPassport::Helpers.change_automatic_groups
+    group_id = BadgeGrouping.find_by(name: SiteSetting.gitcoin_passport_badge_group)&.id
+    if group_id
+      Badge.where(badge_grouping_id: group_id).pluck(:id).each do |badge_id|
+        args = { badge_id: badge_id }
+        Jobs.enqueue(:gitcoin_passport_update_badge_users, args)
+      end
+    end
+  end
+
   DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
+    if [:gitcoin_passport_enabled].include? name
+      initialize_gitcoin_passport_plugin
+    end
+
     if [:gitcoin_passport_group_levels].include? name
       DiscourseGitcoinPassport::Helpers.change_automatic_groups
     end
@@ -128,13 +143,8 @@ after_initialize do
 
   # initialize correctly
   if Discourse.running_in_rack?
-    DiscourseGitcoinPassport::Helpers.change_automatic_groups
-    group_id = BadgeGrouping.find_by(name: SiteSetting.gitcoin_passport_badge_group)&.id
-    if group_id
-      Badge.where(badge_grouping_id: group_id).pluck(:id).each do |badge_id|
-        args = { badge_id: badge_id }
-        Jobs.enqueue(:gitcoin_passport_update_badge_users, args)
-      end
+    RailsMultisite::ConnectionManagement.each_connection do |db_name|
+      initialize_gitcoin_passport_plugin if SiteSetting.gitcoin_passport_enabled
     end
   end
 end

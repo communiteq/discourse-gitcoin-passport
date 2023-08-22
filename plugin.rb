@@ -57,7 +57,7 @@ after_initialize do
 
     def set_unique_humanity_score(score)
       # we save the score with leading digits as 000.00 so we can easily compare strings in SQL
-      fmt_score = sprintf('%06.2f', score)
+      fmt_score = sprintf('%07.3f', score)
       if self.custom_fields[:unique_humanity_score] != fmt_score
         self.custom_fields[:unique_humanity_score] = fmt_score
         self.save_custom_fields

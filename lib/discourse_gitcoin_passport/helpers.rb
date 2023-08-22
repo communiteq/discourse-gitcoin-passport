@@ -125,7 +125,7 @@ module DiscourseGitcoinPassport
 
     def self.update_users_for_badge(badge)
       min_score = self.get_badge_score_for_type(badge.badge_type_id)
-      formatted_min_score = sprintf('%06.2f', min_score)
+      formatted_min_score = sprintf('%07.3f', min_score)
       current_user_ids = UserBadge.where(badge_id: badge.id).pluck(:user_id)
       qualifying_user_ids = UserCustomField.where(name: 'unique_humanity_score').where("value >= '#{formatted_min_score}'").pluck(:user_id)
 
@@ -145,7 +145,7 @@ module DiscourseGitcoinPassport
 
     def self.update_users_for_group(group)
       level = group.name[/unique_humanity_(\d+)/,1].to_i
-      formatted_level = sprintf('%06.2f', level)
+      formatted_level = sprintf('%07.3f', level)
       current_user_ids = group.users.pluck(:id)
       qualifying_user_ids = UserCustomField.where(name: 'unique_humanity_score').where("value >= '#{formatted_level}'").pluck(:user_id)
 

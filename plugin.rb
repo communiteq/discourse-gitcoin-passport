@@ -110,4 +110,5 @@ after_initialize do
     end
   end
 
+  DiscourseGitcoinPassport::Helpers.change_automatic_groups if Discourse.running_in_rack?
 end

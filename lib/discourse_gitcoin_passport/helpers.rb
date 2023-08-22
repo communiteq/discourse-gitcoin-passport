@@ -64,7 +64,9 @@ module DiscourseGitcoinPassport
 
       if (remove_levels.count + add_levels.count) > 0
         Jobs.enqueue(:gitcoin_passport_update_group_membership)
+        return true
       end
+      false
     end
 
     def self.update_groups_for_user(user)

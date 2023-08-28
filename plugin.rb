@@ -89,7 +89,7 @@ after_initialize do
 
   # refresh screen on connect of SIWE account
   add_model_callback(UserAssociatedAccount, :after_commit, on: :create) do
-    if self.provider_name = "siwe"
+    if self.provider_name == "siwe"
       MessageBus.publish("/file-change", ["refresh"], user_ids: [ self.user.id ])
     end
   end

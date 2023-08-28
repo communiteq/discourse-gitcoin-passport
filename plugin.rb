@@ -80,7 +80,7 @@ after_initialize do
 
   # destroy passport on removal of SIWE account
   add_model_callback(UserAssociatedAccount, :before_destroy) do
-    if self.provider_name = "siwe"
+    if self.provider_name == "siwe"
       self.user.set_unique_humanity_score(0)
       self.user.custom_fields.delete(:unique_humanity_score)
       self.user.save_custom_fields

@@ -1,6 +1,6 @@
 # name: discourse-gitcoin-passport
 # about: Communiteq Gitcoin Passport plugin
-# version: 1.0.3
+# version: 1.0.4
 # authors: richard@communiteq.com
 # url: https://github.com/communiteq/discourse-gitcoin-passport
 
@@ -66,6 +66,12 @@ after_initialize do
       end
       score
     end
+
+    def remove_passport
+      self.set_unique_humanity_score(0)
+      self.custom_fields.delete(:unique_humanity_score)
+      self.save_custom_fields
+    end
   end
 
   %i[current_user basic_user admin_detailed_user].each do |s|
@@ -81,16 +87,36 @@ after_initialize do
   # destroy passport on removal of SIWE account
   add_model_callback(UserAssociatedAccount, :before_destroy) do
     if self.provider_name == "siwe"
-      self.user.set_unique_humanity_score(0)
-      self.user.custom_fields.delete(:unique_humanity_score)
-      self.user.save_custom_fields
+        self.user.remove_passport
     end
   end
 
-  # refresh screen on connect of SIWE account
-  add_model_callback(UserAssociatedAccount, :after_commit, on: :create) do
+  # refresh screen on connect of SIWE account and detect if account was transferred
+  add_model_callback(UserAssociatedAccount, :after_commit) do
     if self.provider_name == "siwe"
       MessageBus.publish("/file-change", ["refresh"], user_ids: [ self.user.id ])
+
+      if self.previous_changes["user_id"] && self.previous_changes["user_id"][0]
+        prev_user = User.find(self.previous_changes["user_id"][0].to_i)
+        if prev_user
+          prev_user.remove_passport
+
+          current_user = User.find(self.previous_changes["user_id"][1].to_i)
+          if current_user # send warning to admins
+            args = {
+              raw: I18n.t("gitcoin_passport.warning_pm.raw", {
+                prev_username: prev_user.username,
+                current_username: current_user.username
+              }),
+              title: I18n.t("gitcoin_passport.warning_pm.title"),
+              target_group_names: [Group[:admins].name],
+              archetype: Archetype.private_message
+            }
+            creator = User.find Discourse::SYSTEM_USER_ID
+            PostCreator.create!(creator, args)
+          end
+        end
+      end
     end
   end
 

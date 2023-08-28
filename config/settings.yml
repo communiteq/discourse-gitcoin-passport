@@ -12,6 +12,7 @@ plugins:
   gitcoin_passport_group_levels:
     client: false
     default: 0,5,10,20,40,80
+    validator: GroupLevelsValidator
   gitcoin_passport_show_on_usercard:
     client: true
     default: true

@@ -11,6 +11,11 @@ en:
     gitcoin_passport_badge_silver_score: "The minimum unique humanity score to get a silver badge."
     gitcoin_passport_badge_gold_score: "The minimum unique humanity score to get a gold badge."
   gitcoin_passport:
+    group_levels_validator:
+      number_error: "All group levels need to be between 0 and 100 inclusive, separated by commas."
+      inuse_error:
+        one: "Group for UH level %{levels} is still in use, you cannot remove it."
+        more: "Groups for UH levels %{levels} are still in use, you cannot remove them."
     warning_pm:
       title: "[Warning] SIWE account transferred to another user"
       raw: |

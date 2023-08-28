@@ -1,6 +1,6 @@
 # name: discourse-gitcoin-passport
 # about: Communiteq Gitcoin Passport plugin
-# version: 1.0.4
+# version: 1.0.5
 # authors: richard@communiteq.com
 # url: https://github.com/communiteq/discourse-gitcoin-passport
 
@@ -11,6 +11,7 @@ module ::DiscourseGitcoinPassport
 end
 
 require_relative "lib/discourse_gitcoin_passport/engine"
+require_relative "lib/validators/group_levels_validator.rb"
 
 after_initialize do
   require_relative "lib/discourse_gitcoin_passport/helpers"

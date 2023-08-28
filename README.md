@@ -101,3 +101,7 @@ and we'll grant you admin permissions.
 
 Last but not least the source is available at https://github.com/communiteq/discourse-gitcoin-passport/
 
+### How to install
+
+To install a Discourse plugin see https://meta.discourse.org/t/install-a-plugin/19157
+

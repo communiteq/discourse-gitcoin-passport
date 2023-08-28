@@ -10,3 +10,11 @@ en:
     gitcoin_passport_badge_bronze_score: "The minimum unique humanity score to get a bronze badge."
     gitcoin_passport_badge_silver_score: "The minimum unique humanity score to get a silver badge."
     gitcoin_passport_badge_gold_score: "The minimum unique humanity score to get a gold badge."
+  gitcoin_passport:
+    warning_pm:
+      title: "[Warning] SIWE account transferred to another user"
+      raw: |
+        The SIWE account from %{prev_username} has now been assigned to %{current_username}.
+
+        Although the Gitcoin passport has now been removed from %{prev_username}, this might be worth looking into.
+        It could be an attempt to share a passport between multiple users.

@@ -95,7 +95,7 @@ after_initialize do
   # refresh screen on connect of SIWE account and detect if account was transferred
   add_model_callback(UserAssociatedAccount, :after_commit) do
     if self.provider_name == "siwe"
-      MessageBus.publish("/file-change", ["refresh"], user_ids: [ self.user.id ])
+      MessageBus.publish("/file-change", ["refresh"], user_ids: [ self.user.id ]) if self.user
 
       if self.previous_changes["user_id"] && self.previous_changes["user_id"][0]
         prev_user = User.find(self.previous_changes["user_id"][0].to_i)

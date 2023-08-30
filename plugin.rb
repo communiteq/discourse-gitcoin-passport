@@ -1,6 +1,6 @@
 # name: discourse-gitcoin-passport
 # about: Communiteq Gitcoin Passport plugin
-# version: 1.0.5
+# version: 1.0.6
 # authors: richard@communiteq.com
 # url: https://github.com/communiteq/discourse-gitcoin-passport
 
@@ -69,7 +69,7 @@ after_initialize do
     end
 
     def remove_passport
-      self.set_unique_humanity_score(0)
+      self.set_unique_humanity_score(-1)
       self.custom_fields.delete(:unique_humanity_score)
       self.save_custom_fields
     end
